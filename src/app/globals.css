@@ -14,7 +14,7 @@ html {
 }
 
 body {
-    font-family: var(--font-plus-jakarta-sans), sans-serif;
+    font-family: "Plus Jakarta Sans", sans-serif;
     background-color: var(--bg-main);
     color: var(--text-dark);
     line-height: 1.6;
@@ -72,7 +72,15 @@ h1, h2, h3 {
     color: var(--text-dark);
 }
 
-h1 { font-size: 3.5rem; }
+h1 { 
+    font-size: 3.5rem; 
+    font-weight: 800; /* Default font weight for h1 */
+}
+
+/* Apply Noto Sans font only to h1 with Vietnamese text or font weight > 600 */
+h1[lang="vi"], h1.vietnamese, h1 strong, h1 b, h1.bold { 
+    font-family: "Noto Sans", sans-serif;
+}
 h2 { font-size: 2.75rem; }
 h3 { font-size: 1.5rem; }
 
@@ -404,4 +412,58 @@ p {
     .footer-col ul {
         align-items: center;
     }
+}
+
+/* Noto Sans Font */
+.noto-sans-400 {
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+}
+
+.noto-sans-500 {
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+}
+
+.noto-sans-700 {
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+}
+
+.noto-sans-900 {
+    font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+}
+
+/* Language Switcher */
+.language-switcher {
+    background-color: var(--bg-accent-light);
+    color: #333; /* Dark gray for better visibility */
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.language-switcher:hover {
+    background-color: var(--brand-green);
+    color: white; /* White color on hover for contrast */
 }

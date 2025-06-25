@@ -9,7 +9,7 @@ export default function AboutPage() {
         <div className="hero">
           <div className="grid-2-cols">
             <div className="hero-text-content" data-aos="fade-right">
-              <h1>About T.Studio</h1>
+              <h1 className="noto-sans-700">About T.Studio</h1>
               <p>T.Studio is a leading software company that has been providing innovative solutions for businesses of all sizes since 2010. Our mission is to help businesses leverage technology to achieve their goals.</p>
               <Link href="/services" className="btn" style={{ marginTop: '1rem' }}>Our Services</Link>
             </div>

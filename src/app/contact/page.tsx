@@ -9,7 +9,7 @@ export default function ContactPage() {
         <div className="hero">
           <div className="grid-2-cols">
             <div className="hero-text-content" data-aos="fade-right">
-              <h1>Contact Us</h1>
+              <h1 className="noto-sans-700">Contact Us</h1>
               <p>Ready to start a project or have questions about our services? We'd love to hear from you. Get in touch with our team today.</p>
               <Link href="#contact-form" className="btn" style={{ marginTop: '1rem' }}>Get in Touch</Link>
             </div>

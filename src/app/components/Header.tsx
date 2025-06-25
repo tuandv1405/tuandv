@@ -1,18 +1,27 @@
+"use client";
+
 import Link from 'next/link';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Header() {
+  const { t } = useLanguage();
+
   return (
     <header className="header">
       <div className="container">
         <nav className="navbar">
           <Link href="/" className="logo">T.Studio</Link>
           <div className="nav-links">
-            <Link href="/about">About</Link>
-            <Link href="/services">Services</Link>
-            <Link href="/experience">Experience</Link>
-            <Link href="/contact">Contact</Link>
+            <Link href="/about">{t('about')}</Link>
+            <Link href="/services">{t('services')}</Link>
+            <Link href="/experience">{t('experience')}</Link>
+            <Link href="/contact">{t('contact')}</Link>
           </div>
-          <Link href="/contact" className="btn">Learn More</Link>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <LanguageSwitcher />
+            <Link href="/contact" className="btn">{t('learn_more')}</Link>
+          </div>
         </nav>
       </div>
     </header>

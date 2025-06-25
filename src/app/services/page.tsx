@@ -9,7 +9,7 @@ export default function ServicesPage() {
         <div className="hero">
           <div className="grid-2-cols">
             <div className="hero-text-content" data-aos="fade-right">
-              <h1>Our Services</h1>
+              <h1 className="noto-sans-700">Our Services</h1>
               <p>At T.Studio, we offer a comprehensive range of software development services to help businesses of all sizes leverage technology to achieve their goals.</p>
               <Link href="/contact" className="btn" style={{ marginTop: '1rem' }}>Get in Touch</Link>
             </div>
