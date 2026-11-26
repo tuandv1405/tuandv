@@ -1,40 +1,46 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Be_Vietnam_Pro, JetBrains_Mono, Silkscreen, VT323 } from "next/font/google";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import AosInitializer from "./components/AosInitializer";
+import SmoothScroll from "./components/SmoothScroll";
+import PixelBackground from "./components/PixelBackground";
+import AnalyticsTracker from "./components/AnalyticsTracker";
 import { LanguageProvider } from "./context/LanguageContext";
 
+const pixel = Silkscreen({ weight: ["400", "700"], subsets: ["latin"], variable: "--f-pixel", display: "swap" });
+const vt = VT323({ weight: "400", subsets: ["latin", "vietnamese"], variable: "--f-vt", display: "swap" });
+const body = Be_Vietnam_Pro({ weight: ["300", "400", "500", "600", "700"], subsets: ["latin", "vietnamese"], variable: "--f-body", display: "swap" });
+const mono = JetBrains_Mono({ weight: ["400", "500"], subsets: ["latin", "vietnamese"], variable: "--f-mono", display: "swap" });
+
 export const metadata: Metadata = {
-  title: "T.Studio - Software Solutions",
-  description: "T.Studio is a leading software company that has been providing innovative solutions for businesses of all sizes since 2010.",
+  title: { default: "Đỗ Văn Tuấn — Mobile Engineer", template: "%s · tuandv" },
+  description:
+    "Portfolio & blog của Đỗ Văn Tuấn — Android developer tại Ahamove. Android, iOS, Compose Multiplatform, Flutter. TS Launcher TV, TS Remote TV, TS IPTV, TS Podcast.",
+  openGraph: {
+    title: "Đỗ Văn Tuấn — Mobile Engineer",
+    description: "Android · iOS · Compose Multiplatform · Flutter",
+    type: "website",
+  },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="vi">
-      <head>
-        {/* AOS (Animate On Scroll) Library CSS */}
-        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-        {/* Google Fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
-      </head>
-      <body>
-        <LanguageProvider>
-          <Header />
-          <main>
-            {children}
-          </main>
-          <Footer />
+export const viewport: Viewport = { themeColor: "#03060e" };
 
-          {/* AOS (Animate On Scroll) Library JS */}
-          <AosInitializer />
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="vi" className={`${pixel.variable} ${vt.variable} ${body.variable} ${mono.variable}`}>
+      <body>
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important;filter:none!important}`}</style>
+        </noscript>
+        <LanguageProvider>
+          <PixelBackground />
+          <SmoothScroll />
+          <AnalyticsTracker />
+          <Header />
+          <main>{children}</main>
+          <Footer />
         </LanguageProvider>
       </body>
     </html>
