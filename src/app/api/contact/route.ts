@@ -8,6 +8,32 @@ const EMAIL_RE = /^[^\s@<>()",;:]{1,64}@[^\s@<>()",;:]{1,190}\.[a-z]{2,24}$/i;
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_PER_WINDOW = 3;
 const hits = new Map<string, number[]>();
+let warnedNoSecret = false;
+
+/** Cloudflare Turnstile siteverify. Without TURNSTILE_SECRET the check is skipped (logged once). */
+async function captchaOk(token: string, ip: string) {
+  const secret = process.env.TURNSTILE_SECRET;
+  if (!secret) {
+    if (!warnedNoSecret) console.warn("[contact] TURNSTILE_SECRET not set — captcha check skipped");
+    warnedNoSecret = true;
+    return true;
+  }
+  if (!token || token.length > 2048) return false;
+  try {
+    const body = new URLSearchParams({ secret, response: token });
+    if (ip !== "unknown") body.set("remoteip", ip);
+    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      body,
+      signal: AbortSignal.timeout(8000),
+    });
+    const data = (await res.json()) as { success?: boolean; action?: string; hostname?: string };
+    return data.success === true && data.action === "contact" && data.hostname === "tuandv.me";
+  } catch (e) {
+    console.error("[contact] siteverify failed:", (e as Error).message);
+    return false;
+  }
+}
 
 function limited(key: string) {
   const now = Date.now();
@@ -45,6 +71,9 @@ export async function POST(req: Request) {
 
   const ip =
     req.headers.get("cf-connecting-ip") || req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  if (!(await captchaOk(String(body.turnstileToken ?? ""), ip))) {
+    return NextResponse.json({ error: "captcha" }, { status: 403 });
+  }
   if (limited(`ip:${ip}`) || limited(`to:${email.toLowerCase()}`)) {
     return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   }

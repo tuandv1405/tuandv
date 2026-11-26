@@ -70,6 +70,7 @@ const ui = {
     form_invalid: "Vui lòng nhập tên, email hợp lệ và nội dung ít nhất 10 ký tự.",
     form_rate: "Bạn gửi hơi nhiều — thử lại sau ít phút nhé.",
     form_error: "Chưa gửi được, bạn thử lại sau hoặc liên hệ qua GitHub nhé.",
+    form_captcha: "Xác minh chống bot chưa qua — bạn đợi ô xác minh hiện dấu tích rồi gửi lại nhé.",
   },
   en: {
     nav_about: "About",
@@ -135,6 +136,7 @@ const ui = {
     form_invalid: "Please enter your name, a valid email and at least 10 characters.",
     form_rate: "That's a lot of messages — please try again in a few minutes.",
     form_error: "Couldn't send right now — please try again later or reach me on GitHub.",
+    form_captcha: "The anti-bot check didn't pass — wait for the checkmark, then send again.",
   },
 } as const;
 
