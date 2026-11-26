@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Turnstile, { type TurnstileHandle } from "./Turnstile";
 import { useLanguage } from "../context/LanguageContext";
 import { track } from "@/lib/analytics";
 
@@ -11,6 +12,8 @@ export default function ContactForm() {
   const [state, setState] = useState<State>("idle");
   const [error, setError] = useState("");
   const started = useRef(Date.now());
+  const [token, setToken] = useState("");
+  const captcha = useRef<TurnstileHandle>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -22,7 +25,7 @@ export default function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, lang: language, elapsed: Date.now() - started.current }),
+        body: JSON.stringify({ ...data, lang: language, elapsed: Date.now() - started.current, turnstileToken: token }),
       });
       if (res.ok) {
         track("generate_lead", { method: "contact_form", language });
@@ -30,9 +33,12 @@ export default function ContactForm() {
         form.reset();
         return;
       }
+      // a token is single-use: get a fresh one before the next attempt
+      captcha.current?.reset();
+      setToken("");
       const { error: code } = await res.json().catch(() => ({ error: "" }));
       track("contact_error", { reason: code || String(res.status) });
-      setError(code === "invalid" ? t("form_invalid") : code === "rate_limited" ? t("form_rate") : t("form_error"));
+      setError(code === "invalid" ? t("form_invalid") : code === "rate_limited" ? t("form_rate") : code === "captcha" ? t("form_captcha") : t("form_error"));
       setState("error");
     } catch {
       setError(t("form_error"));
@@ -71,9 +77,10 @@ export default function ContactForm() {
         Website
         <input name="website" tabIndex={-1} autoComplete="off" />
       </label>
+      <Turnstile ref={captcha} onToken={setToken} language={language} />
       <div className="cform-foot">
         <p className="muted">{t("form_note")}</p>
-        <button className="btn btn-primary" type="submit" disabled={state === "sending"}>
+        <button className="btn btn-primary" type="submit" disabled={state === "sending" || !token}>
           {state === "sending" ? t("form_sending") : t("form_send")}
         </button>
       </div>
