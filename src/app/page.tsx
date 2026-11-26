@@ -1,142 +1,253 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "./context/LanguageContext";
+import { jobs, marquee, profile, skillGroups } from "./data/profile";
+import projects from "./data/projects";
+import posts from "./data/posts";
+import PixelSprite from "./components/PixelSprite";
+import Section from "./components/Section";
+import Typer from "./components/Typer";
+import ProjectGrid from "./components/ProjectGrid";
+import PostCard from "./components/PostCard";
+import ContactForm from "./components/ContactForm";
+import { AppleIcon, PlayIcon } from "./components/StoreIcon";
+import { skillSprite } from "./components/sprites";
+
+const ROLES = ["Android", "iOS", "Compose Multiplatform", "Flutter", "Android TV"];
+const APPS_ON_STORES = 4; // TS IPTV, TS Podcast, TS Remote TV, Lịch Vạn Niên
 
 export default function Home() {
-  const { t, language } = useLanguage();
+  const { t, pick, language } = useLanguage();
 
   return (
     <>
-      {/* Hero Section */}
-      <section id="about" className="container">
-        <div className="hero">
-          <div className="grid-2-cols">
-            <div className="hero-text-content" data-aos="fade-right">
-              <h1 lang={language}>{t('about_tstudio')}</h1>
-              <p>{t('about_description')}</p>
-              <Link href="/services" className="btn" style={{ marginTop: '1rem' }}>{t('explore_our_work')}</Link>
+      {/* ── HERO ── */}
+      <section className="hero">
+        <div className="container hero-grid">
+          <div className="hero-copy">
+            <p className="badge" data-reveal>
+              <span className="dot" /> {t("available")}
+            </p>
+            <p className="hero-hello" data-reveal>{t("hello")}</p>
+            <h1 className="hero-name" data-reveal data-text={profile.name}>
+              {profile.name}
+            </h1>
+            <p className="hero-role" data-reveal>
+              <span className="prompt">&gt;</span> {pick(profile.role)} · <Typer words={ROLES} />
+            </p>
+            <p className="hero-tagline" data-reveal>{pick(profile.tagline)}</p>
+            <div className="hero-cta" data-reveal>
+              <Link href="/#projects" className="btn btn-primary">
+                {t("cta_projects")}
+              </Link>
+              <Link href={profile.links.playStore} target="_blank" rel="noopener" className="btn btn-ghost">
+                <PlayIcon size={16} /> Google Play
+              </Link>
+              <Link href={profile.links.appStore} target="_blank" rel="noopener" className="btn btn-ghost">
+                <AppleIcon size={16} /> App Store
+              </Link>
             </div>
-            <div className="hero-image-wrapper" data-aos="fade-left">
-              <div className="hero-image-bg-circle"></div>
-              <Image 
-                src="/hero-person.png" 
-                alt="Developer holding a laptop" 
-                className="hero-image"
-                width={500}
-                height={500}
-                style={{ objectFit: 'cover', objectPosition: 'center' }}
-              />
-            </div>
+            <dl className="stats" data-reveal>
+              <div>
+                <dt>{projects.length}</dt>
+                <dd>{t("stat_projects")}</dd>
+              </div>
+              <div>
+                <dt>{APPS_ON_STORES}</dt>
+                <dd>{t("stat_apps")}</dd>
+              </div>
+              <div>
+                <dt>{new Date().getFullYear() - 2019}+</dt>
+                <dd>{t("stat_years")}</dd>
+              </div>
+            </dl>
           </div>
-          <div className="hero-tabs" data-aos="fade-up" data-aos-delay="200">
-            <div className="hero-tabs-links">
-              <span>{t('meet_the_team')}</span>
-              <span>{t('our_expertise')}</span>
-              <span>{t('our_approach')}</span>
+
+          <div className="hero-art" data-reveal>
+            <div className="console glass px">
+              <div className="console-bar">
+                <i /><i /><i />
+                <span>player_1.kt</span>
+              </div>
+              <div className="console-screen">
+                <PixelSprite name="avatar" size={180} className="avatar" title={profile.name} />
+                <p className="blink">{t("press_start")}</p>
+              </div>
+              <div className="console-hp">
+                <span>LV.99</span>
+                <div className="hp"><i style={{ width: "86%" }} /></div>
+                <span>MOBILE</span>
+              </div>
             </div>
-            <Link href="/contact" className="btn">{t('get_in_touch')}</Link>
+            <PixelSprite name="tv" size={64} className="float f1" />
+            <PixelSprite name="mic" size={46} className="float f2" />
+            <PixelSprite name="antenna" size={52} className="float f3" />
+            <PixelSprite name="grid" size={48} className="float f4" />
           </div>
         </div>
+        <a href="#about" className="scroll-hint" aria-label="Scroll">
+          <span />
+        </a>
       </section>
 
-      {/* Innovative Software Section */}
-      <section id="services" className="content-section section-padding container">
-        <div className="grid-2-cols">
-          <div className="image-wrapper" data-aos="fade-right">
-            <Image 
-              src="/software-person.png" 
-              alt="Man in a suit using a laptop"
-              width={600}
-              height={400}
-            />
-          </div>
-          <div className="text-content" data-aos="fade-left">
-            <h2>{t('innovative_software')}</h2>
-            <p>{t('innovative_description')}</p>
-            <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', alignItems: 'center' }} className="btn-group">
-              <Link href="/contact" className="btn">{t('get_a_demo')}</Link>
-              <Link href="/services" className="btn-secondary">{t('learn_more')}</Link>
-            </div>
-          </div>
+      {/* ── MARQUEE ── */}
+      <div className="marquee" aria-hidden>
+        <div className="marquee-track">
+          {[...marquee, ...marquee].map((m, i) => (
+            <span key={i}>
+              {m} <b>✦</b>
+            </span>
+          ))}
         </div>
-      </section>
+      </div>
 
-      {/* Experience Section */}
-      <section id="experience" className="experience-section section-padding">
-        <div className="container">
-          <div className="experience-header" data-aos="fade-up">
-            <h2>{t('experience_power')}</h2>
+      {/* ── ABOUT ── */}
+      <Section id="about" index="01" title={t("sec_about")}>
+        <div className="about-grid">
+          <div className="about-text" data-reveal>
+            {profile.about.map((p, i) => (
+              <p key={i}>{pick(p)}</p>
+            ))}
           </div>
-          <div className="experience-grid">
-            {/* Card 1 */}
-            <div className="experience-card" data-aos="fade-up" data-aos-delay="100">
-              <div className="icon-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
-              </div>
-              <h3>{t('customization')}</h3>
-              <p>{t('customization_desc')}</p>
-            </div>
-            {/* Card 2 */}
-            <div className="experience-card" data-aos="fade-up" data-aos-delay="200">
-              <div className="icon-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
-              </div>
-              <h3>{t('performance')}</h3>
-              <p>{t('performance_desc')}</p>
-            </div>
-            {/* Card 3 */}
-            <div className="experience-card" data-aos="fade-up" data-aos-delay="300">
-              <div className="icon-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.286zm0 13.036h.008v.008h-.008v-.008z" /></svg>
-              </div>
-              <h3>{t('security')}</h3>
-              <p>{t('security_desc')}</p>
-            </div>
-          </div>
+          <pre className="terminal glass px" data-reveal>
+            <code>
+              <span className="c-dim">$ cat player.json</span>
+              {"\n{\n"}
+              {`  "name": "${profile.name}",\n`}
+              {`  "role": "Android Developer @ Ahamove",\n`}
+              {`  "since": "2019",\n`}
+              {`  "platforms": ["Android", "iOS", "KMP", "Flutter"],\n`}
+              {`  "side_quest": "TS Studio apps",\n`}
+              {`  "status": "${language === "vi" ? "đang build" : "building"}"\n`}
+              {"}"}
+              {"\n"}
+              <span className="c-dim">$ </span>
+              <span className="caret">▌</span>
+            </code>
+          </pre>
         </div>
-      </section>
+      </Section>
 
-      {/* Connect Section */}
-      <section id="contact" className="content-section section-padding container">
-        <div className="grid-2-cols">
-          <div className="image-wrapper" data-aos="fade-right">
-            <Image 
-              src="/connect-person.png" 
-              alt="Smiling woman ready to connect"
-              width={600}
-              height={400}
-            />
-          </div>
-          <div className="text-content" data-aos="fade-left">
-            <h2>{t('connect_with_tstudio')}</h2>
-            <p>{t('connect_description')}</p>
-            <div className="connect-grid">
-              <Link href="/contact" className="connect-link">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" /></svg>
-                <span>{t('call_us')}</span>
-              </Link>
-              <Link href="/contact" className="connect-link">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.006 3 11.5c0 2.39.998 4.594 2.625 6.108M12 20.25v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v3.375M12 20.25a1.5 1.5 0 01-1.5-1.5v-2.25a1.5 1.5 0 011.5-1.5h2.25a1.5 1.5 0 011.5 1.5v2.25a1.5 1.5 0 01-1.5 1.5M12 20.25h.008v.008H12v-.008z" /></svg>
-                <span>{t('follow_us')}</span>
-              </Link>
-              <Link href="/contact" className="connect-link">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
-                <span>{t('email_us')}</span>
-              </Link>
-              <Link href="/contact" className="connect-link">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.5-12.75a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V4.5a.75.75 0 01.75-.75z" /></svg>
-                <span>{t('visit_us')}</span>
-              </Link>
-            </div>
-            <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', alignItems: 'center' }} className="btn-group">
-              <Link href="/contact" className="btn">{t('contact_us')}</Link>
-              <Link href="/contact" className="btn-secondary">{t('stay_connected')}</Link>
-            </div>
-          </div>
+      {/* ── SKILLS ── */}
+      <Section id="skills" index="02" title={t("sec_skills")} lead={t("skills_lead")}>
+        <div className="skills">
+          {skillGroups.map((g, i) => (
+            <article key={g.id} className="skill glass px" data-reveal style={{ transitionDelay: `${(i % 3) * 80}ms` }}>
+              <div className="skill-head">
+                <PixelSprite name={skillSprite[g.id]} size={34} />
+                <h3>{pick(g.title)}</h3>
+              </div>
+              <ul className="chips">
+                {g.items.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
         </div>
-      </section>
+      </Section>
+
+      {/* ── WORK ── */}
+      <Section id="work" index="03" title={t("sec_work")}>
+        <ol className="timeline">
+          {jobs.map((j) => (
+            <li key={j.id} className="tl-item" data-reveal>
+              <span className="tl-node" aria-hidden />
+              <div className="tl-card glass px">
+                <div className="tl-when">
+                  {j.from} → {pick(j.to)}
+                </div>
+                <h3>
+                  {pick(j.title)}{" "}
+                  <span className="at">
+                    @ {j.url ? <a href={j.url} target="_blank" rel="noopener">{pick(j.company)}</a> : pick(j.company)}
+                  </span>
+                </h3>
+                <p>{pick(j.summary)}</p>
+                {j.bullets.length > 0 && (
+                  <ul className="bullets">
+                    {j.bullets.map((b, i) => (
+                      <li key={i}>{pick(b)}</li>
+                    ))}
+                  </ul>
+                )}
+                <ul className="chips">
+                  {j.tags.map((x) => (
+                    <li key={x}>{x}</li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </Section>
+
+      {/* ── PROJECTS ── */}
+      <Section id="projects" index="04" title={t("sec_projects")} lead={t("projects_lead")}>
+        <ProjectGrid />
+      </Section>
+
+      {/* ── STORES ── */}
+      <Section id="stores" index="05" title={t("sec_stores")} lead={t("stores_lead")}>
+        <div className="stores">
+          <a href={profile.links.playStore} target="_blank" rel="noopener" className="store glass px" data-reveal>
+            <PlayIcon size={48} />
+            <div>
+              <strong>{t("play_store")}</strong>
+              <span>{t("play_sub")}</span>
+              <em>TS IPTV · TS Podcast</em>
+            </div>
+            <span className="store-go">{t("open_store")} ↗</span>
+          </a>
+          <a href={profile.links.appStore} target="_blank" rel="noopener" className="store glass px" data-reveal style={{ transitionDelay: "80ms" }}>
+            <AppleIcon size={48} />
+            <div>
+              <strong>{t("app_store")}</strong>
+              <span>{t("app_store_sub")}</span>
+              <em>TS Remote TV · TS IPTV · TS Podcast · Lịch Vạn Niên</em>
+            </div>
+            <span className="store-go">{t("open_store")} ↗</span>
+          </a>
+        </div>
+      </Section>
+
+      {/* ── BLOG ── */}
+      <Section id="blog" index="06" title={t("sec_blog")} lead={t("blog_lead")}>
+        <div className="posts">
+          {posts.slice(0, 3).map((p, i) => (
+            <PostCard key={p.slug} post={p} delay={i * 80} />
+          ))}
+        </div>
+        <div className="center" data-reveal>
+          <Link href="/blog" className="btn btn-ghost">
+            {t("all_posts")} →
+          </Link>
+        </div>
+      </Section>
+
+      {/* ── CONTACT ── */}
+      <Section id="contact" index="07" title={t("sec_contact")}>
+        <div className="contact glass px" data-reveal>
+          <div className="contact-intro">
+            <PixelSprite name="avatar" size={72} className="bob" />
+            <h3>{t("contact_title")}</h3>
+            <p>{t("contact_lead")}</p>
+            <div className="contact-links">
+              <a className="btn btn-ghost" href={profile.links.github} target="_blank" rel="noopener">
+                GitHub
+              </a>
+              <a className="btn btn-ghost" href={profile.links.playStore} target="_blank" rel="noopener">
+                <PlayIcon size={16} /> Play
+              </a>
+              <a className="btn btn-ghost" href={profile.links.appStore} target="_blank" rel="noopener">
+                <AppleIcon size={16} /> App Store
+              </a>
+            </div>
+          </div>
+          <ContactForm />
+        </div>
+      </Section>
     </>
   );
 }
